@@ -1,0 +1,100 @@
+<?php
+
+?>
+
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+
+<style>
+  body {
+    width: 100%;
+    height: 100vh;
+    background: url("./img/background.png") no-repeat center ;
+    background-size: cover;
+    background-color: #2148C0;
+  }
+
+  ::placeholder {
+    color: white;
+  }
+</style>
+
+<body>
+<div class="d-flex justify-content-center align-items-center w-100 h-100">
+  <div class="d-flex justify-content-center align-items-center flex-column gap-4">
+    <img src="./img/magazine.png" alt="">
+    <form action="" id="forgotForm" class="d-flex justify-content-center align-items-center flex-column gap-3 col-lg-2 w-100">
+      <input type="email" id="email" name="email" class="bg-transparent border border-white p-2 ps-4 rounded-2 w-100 text-white" placeholder="EMAIL">
+      <p class="text-danger m-0 me-auto" id="email_login"></p>
+      <button type="submit" class="w-100 btn btn-light text-primary shadow-lg fw-bold">Send</button>
+    </form>
+    <form action="" id="validateForm" class="d-none d-flex justify-content-center align-items-center flex-column gap-3 col-lg-2 w-100">
+      <input type="number" id="passcode" max="1000000" name="passcode" class="bg-transparent border border-white p-2 ps-4 rounded-2 w-100 text-white">
+
+      <button type="submit" class="w-100 btn btn-light text-primary shadow-lg fw-bold">Verify</button>
+    </form>
+    <div class=" ms-auto text-end">
+      <a href="./register.html" class="text-decoration-none text-white">Cancel</a>
+    </div>
+  </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+<script>
+  $('#forgotForm').submit(function(e) {
+    e.preventDefault();
+    const email = $('#email').val();
+
+    $.ajax({
+      url: 'server.php',
+      type: 'POST',
+      data: {
+        email: email,
+        action: "forgotFunction"
+      },
+      success: function(r) {
+        $("#validateForm").removeClass("d-none");
+        $("#forgotForm").addClass("d-none");
+        sessionStorage.setItem('email', JSON.stringify(email));
+      }
+    })
+  })
+
+  $('#validateForm').submit(function (e) {
+    e.preventDefault();
+    const passcode = $('#passcode').val();
+
+    $.ajax({
+      url: 'server.php',
+      type: "POST",
+      data: {
+        passcode:passcode,
+        action: "validatefunction"
+      },
+      success: function(r) {
+        const { success, error } = JSON.parse(r)
+        console.log(success, error);
+
+        if (success) {
+          location.href = 'updatepassword.html'
+        }
+        if (error) {
+          alert("Doesn't match");
+          location.href = 'index.html'
+        }
+      },
+    })
+  })
+</script>
+</body>
+</html>

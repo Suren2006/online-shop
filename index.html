@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+
+<style>
+    body {
+        width: 100%;
+        height: 100vh;
+        background: url("./img/background.png") no-repeat center ;
+        background-size: cover;
+        background-color: #2148C0;
+    }
+
+    ::placeholder {
+        color: white;
+    }
+</style>
+
+<body>
+    <div class="d-flex justify-content-center align-items-center w-100 h-100">
+        <div class="d-flex justify-content-center align-items-center flex-column gap-4">
+            <img src="./img/magazine.png" alt="">
+            <form action="" id="loginForm" class="d-flex justify-content-center align-items-center flex-column gap-3 col-lg-2 w-100">
+                <input type="email" id="email" name="email" class="bg-transparent border border-white p-2 ps-4 rounded-2 w-100 text-white" placeholder="EMAIL">
+                <p class="text-danger m-0 me-auto" id="email_login"></p>
+                <input type="password" id="password" name="password" class="bg-transparent border border-white p-2 ps-4 rounded-2 w-100 text-white" placeholder="PASSWORD">
+                <p class="m-0 text-danger me-auto" id="password_login"></p>
+                <button type="submit" class="w-100 btn btn-light text-primary shadow-lg fw-bold">Login</button>
+            </form>
+            <div class=" ms-auto text-end">
+                <a href="./forgot.html" class="text-decoration-none text-white">Forgot password?</a>
+                <br>
+                <a href="./register.html" class="text-decoration-none text-white">Register</a>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <script>
+        $('#loginForm').submit(function(e) {
+            e.preventDefault();
+            const email = $('#email').val();
+            const password = $('#password').val();
+            let errors = []
+
+            $.ajax({
+                url: 'server.php',
+                type: 'POST',
+                data: {
+                    email: email,
+                    password: password,
+                    action: "login"
+                },
+                success: function(r) {
+                    const { errors, role} = JSON.parse(r) || null;
+                    if (role == 'user') {
+                        location.href = 'profile.php';
+                    }
+                    if (role == 'admin') {
+                        location.href = 'admin/admin.php';
+                    }
+                    if (errors) {
+                        Object.keys(errors).forEach((value) => {
+                            console.log(value);
+                            $(`#${value}`).empty();
+                            $(`#${value}`).append(errors[value]);
+                        })
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+</html>
