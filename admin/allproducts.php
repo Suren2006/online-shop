@@ -66,7 +66,7 @@ if (isset($_GET['query']) && isset($_GET['type'])) {
             <?php 
                 if (!empty($products)) {
                     foreach ($products as $product) { ?>
-                        <div class="card col-lg-3 col-sm-5 col-12">
+                        <div class="card col-lg-3 col-sm-5 col-12 card_hover">
                             <img src="../<?= $product['image'] ?>" class="card-img-top w-100 object-fit-contain overflow-hidden" style="aspect-ratio: 1" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title"><a href="./showProduct.php?id=<?= $product['id'] ?>"  class="text-decoration-none text-black"> <?= $product['title'] ?></a> </h5>
